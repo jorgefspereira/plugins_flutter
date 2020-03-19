@@ -215,6 +215,7 @@ class WebView extends StatefulWidget {
     this.onPageFinished,
     this.scrollEnabled = true,
     this.onWebResourceError,
+    this.scrollEnabled = true,
     this.debuggingEnabled = false,
     this.gestureNavigationEnabled = false,
     this.userAgent,
