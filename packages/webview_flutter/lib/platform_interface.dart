@@ -231,6 +231,7 @@ class WebSettings {
     this.javascriptMode,
     this.hasNavigationDelegate,
     this.debuggingEnabled,
+    this.scrollEnabled,
     this.gestureNavigationEnabled,
     @required this.userAgent,
   }) : assert(userAgent != null);
@@ -261,9 +262,14 @@ class WebSettings {
   /// See also: [WebView.gestureNavigationEnabled]
   final bool gestureNavigationEnabled;
 
+  /// Allow to disable the webview scroll behavior
+  ///
+  /// See also: [WebView.scrollEnabled].
+  final bool scrollEnabled;
+
   @override
   String toString() {
-    return 'WebSettings(javascriptMode: $javascriptMode, hasNavigationDelegate: $hasNavigationDelegate, debuggingEnabled: $debuggingEnabled, gestureNavigationEnabled: $gestureNavigationEnabled, userAgent: $userAgent)';
+    return 'WebSettings(javascriptMode: $javascriptMode, hasNavigationDelegate: $hasNavigationDelegate, debuggingEnabled: $debuggingEnabled, gestureNavigationEnabled: $gestureNavigationEnabled, userAgent: $userAgent, scrollEnabled: $scrollEnabled)';
   }
 }
 

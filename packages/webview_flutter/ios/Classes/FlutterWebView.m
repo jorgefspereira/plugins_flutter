@@ -278,6 +278,7 @@
 // Returns nil when successful, or an error message when one or more keys are unknown.
 - (NSString*)applySettings:(NSDictionary<NSString*, id>*)settings {
   NSMutableArray<NSString*>* unknownKeys = [[NSMutableArray alloc] init];
+  
   for (NSString* key in settings) {
     if ([key isEqualToString:@"jsMode"]) {
       NSNumber* mode = settings[key];
@@ -294,6 +295,9 @@
     } else if ([key isEqualToString:@"userAgent"]) {
       NSString* userAgent = settings[key];
       [self updateUserAgent:[userAgent isEqual:[NSNull null]] ? nil : userAgent];
+    } else if ([key isEqualToString:@"scrollEnabled"]) {
+      NSNumber* scrollEnabled = settings[key];
+      _webView.scrollView.scrollEnabled = [scrollEnabled boolValue];
     } else {
       [unknownKeys addObject:key];
     }
