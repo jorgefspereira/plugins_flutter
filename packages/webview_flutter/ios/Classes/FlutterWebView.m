@@ -108,6 +108,11 @@
     }
 
     [self applySettings:settings];
+
+    _webView.opaque = NO;
+    _webView.backgroundColor = UIColor.clearColor;
+    _webView.scrollView.backgroundColor = UIColor.clearColor;
+
     // TODO(amirh): return an error if apply settings failed once it's possible to do so.
     // https://github.com/flutter/flutter/issues/36228
 
