@@ -280,6 +280,7 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
           break;
         case "scrollEnabled":
           webView.setScrollContainer((boolean) settings.get(key));
+          break;
         default:
           throw new IllegalArgumentException("Unknown WebView setting: " + key);
       }
