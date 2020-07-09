@@ -97,11 +97,8 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
     // Sets background color to transparent
     webView.setBackgroundColor(Color.TRANSPARENT);
-<<<<<<< HEAD
     // Overriding accessibility setting to increase text size
     webView.getSettings().setTextZoom(100);
-=======
->>>>>>> webview background color transparent
 
     // Multi windows is set with FlutterWebChromeClient by default to handle internal bug: b/159892679.
     webView.getSettings().setSupportMultipleWindows(true);
