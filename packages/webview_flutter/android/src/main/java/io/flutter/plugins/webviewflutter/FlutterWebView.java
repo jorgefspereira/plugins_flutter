@@ -52,6 +52,8 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
     // Sets background color to transparent
     webView.setBackgroundColor(Color.TRANSPARENT);
+    // Overriding accessibility setting to increase text size
+    webView.getSettings().setTextZoom(100);
 
     methodChannel = new MethodChannel(messenger, "plugins.flutter.io/webview_" + id);
     methodChannel.setMethodCallHandler(this);
