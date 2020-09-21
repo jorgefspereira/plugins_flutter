@@ -10,9 +10,14 @@ import android.graphics.Color;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebStorage;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import androidx.annotation.NonNull;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -29,6 +34,46 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   private final MethodChannel methodChannel;
   private final FlutterWebViewClient flutterWebViewClient;
   private final Handler platformThreadHandler;
+
+  // Verifies that a url opened by `Window.open` has a secure url.
+  private class FlutterWebChromeClient extends WebChromeClient {
+    @Override
+    public boolean onCreateWindow(
+        final WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+      final WebViewClient webViewClient =
+          new WebViewClient() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean shouldOverrideUrlLoading(
+                @NonNull WebView view, @NonNull WebResourceRequest request) {
+              final String url = request.getUrl().toString();
+              if (!flutterWebViewClient.shouldOverrideUrlLoading(
+                  FlutterWebView.this.webView, request)) {
+                webView.loadUrl(url);
+              }
+              return true;
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+              if (!flutterWebViewClient.shouldOverrideUrlLoading(
+                  FlutterWebView.this.webView, url)) {
+                webView.loadUrl(url);
+              }
+              return true;
+            }
+          };
+
+      final WebView newWebView = new WebView(view.getContext());
+      newWebView.setWebViewClient(webViewClient);
+
+      final WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+      transport.setWebView(newWebView);
+      resultMsg.sendToTarget();
+
+      return true;
+    }
+  }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
   @SuppressWarnings("unchecked")
@@ -54,6 +99,10 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     webView.setBackgroundColor(Color.TRANSPARENT);
     // Overriding accessibility setting to increase text size
     webView.getSettings().setTextZoom(100);
+
+    // Multi windows is set with FlutterWebChromeClient by default to handle internal bug: b/159892679.
+    webView.getSettings().setSupportMultipleWindows(true);
+    webView.setWebChromeClient(new FlutterWebChromeClient());
 
     methodChannel = new MethodChannel(messenger, "plugins.flutter.io/webview_" + id);
     methodChannel.setMethodCallHandler(this);
